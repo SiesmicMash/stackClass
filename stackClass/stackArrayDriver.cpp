@@ -153,45 +153,129 @@ bool isSpecialPallindrome2(string& s) {
     return stackObj.isEmpty();
 }
 
-/*Balanced String implementation
+//alanced String implementation
+
+// AAAAABBBBBB
 
 bool isBalancedString(string &s) {
 
     ArrayStack<char> stackObj;
+    bool flag = false;
     int i = 0;
     
     while (i < s.length()) {
-        
-        if (s[i] == 'A') {
-            stackObj.push(s[i]);
-            i++;
-        }
-        
-        else if(s[i] == 'B') {
-            
-            if(stackObj.isEmpty()) {
+        if (s[i] == 'A')
+        {
+            if (!flag)
+                stackObj.push(s[i]);
+            else
                 return false;
-            }
-            
-            if (stackObj.peek() != 'A') {
+        }
+        else if (s[i] == 'B')
+        {
+            if (!flag)
+                flag = true;
+            if (stackObj.isEmpty())
+                return false;
+            else
                 stackObj.pop();
-            }
-            
         }
-        else  {
+        else
             return false;
-        }
-    
-        
         i++;
-
     }
     return stackObj.isEmpty();
-} */
+}
+
+/*
+if (s[i] == 'A' && !flag) {
+    stackObj.push(s[i]);
+    i++;
+}
+else if (s[i] == 'B' && !flag)
+{
+    flag = true;
+}
+else if(s[i] == 'B' && flag) {
+    
+    if(stackObj.isEmpty()) {
+        return false;
+    }
+    
+    else if (stackObj.peek() != 'A') {
+        stackObj.pop();
+    }
+    
+}
+else  {
+    return false;
+}
+
+
+i++;
+ */
 
 //Check if a given string is a postfix expression
 
-bool isPostFixExpression(string& s) {
+bool isDigit(const char ch)
+{
+    return ch >= '0' && ch <= '9';
+}
+int eval(const int a, const int b, const char ch)
+{
+    assert(ch == '+' || ch == '-' || ch == '*' || ch == '/' || ch == '%');
+    int result = 0;
+    switch (ch)
+    {
+        case '+':
+            result = a + b;
+            break;
+        case '-':
+            result = a - b;
+            break;
+        case '*':
+            result = a * b;
+            break;
+        case '/':
+            assert(b != 0);
+            result = a / b;
+            break;
+        case '%':
+            assert(b != 0);
+            result = a % b;
+    }
+    return result;
+}
+
+int evalPostFixExpression(string& s) {
+    ArrayStack<int> stackObj;
+    for (int i = 0; i < s.length(); i++)
+    {
+        if (isDigit(s[i]))
+            stackObj.push(s[i] - '0');
+        else
+        {
+            assert(!stackObj.isEmpty());
+            int b = stackObj.peek();
+            stackObj.pop();
+            
+            assert(!stackObj.isEmpty());
+            int a = stackObj.peek();
+            stackObj.pop();
+            
+            int c = eval(a, b, s[i]);
+            stackObj.push(c);
+        }
+    }
+    assert(!stackObj.isEmpty());
+    int result = stackObj.peek();
+    stackObj.pop();
+    assert(stackObj.isEmpty());
+    return result;
+}
+    
+    
+    /*
     ArrayStack<int> stackObj;
     int x = 0, y = 0;
     int result = 0;
@@ -247,22 +331,26 @@ bool isPostFixExpression(string& s) {
     else {
         return false;
     }
-}
+    */
+
 
 /*
 int main() {
     string s;
     
-    cout << "Please enter a postfix expression";
+    cout << "Please enter a balanced expression";
     cin >> s;
     
-    if (isPostFixExpression(s)) {
-        cout << "The string is a postfix expression" << endl;
+    if (isBalancedString(s)) {
+        cout << "The string is a balanced expression" << endl;
     }
     else {
-        cout << "The string is not a postfix expression" << endl;
+        cout << "The string is not a balanced expression" << endl;
     }
-}
+    
+    return 0;
+}*/
+
 
 int main() {
     string s;
@@ -270,11 +358,12 @@ int main() {
     cout << "Please enter a postfix expression";
     cin >> s;
     
-    if (isPostFixExpression(s)) {
-        cout << "The string is a postfix expression" << endl;
-    }
-    else {
-        cout << "The string is not a postfix expression" << endl;
-    }
+    
+    
+    int result = evalPostFixExpression(s);
+    cout << "The postfix is evaluated to " << result << endl;
+    
+    return 0;
+    
 }
-*/
+

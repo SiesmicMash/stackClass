@@ -14,7 +14,7 @@ template <class ItemType>
 class ArrayStack : public StackInterface<ItemType> {
 
 private:
-    static const int DEFAULT_CAPACITY = 5;
+    static const int DEFAULT_CAPACITY = 25;
     ItemType items[DEFAULT_CAPACITY];
     int topItemIndex;
     
